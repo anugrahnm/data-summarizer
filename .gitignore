@@ -7,6 +7,6 @@ wheels/
 *.egg-info
 
 .env
-
+response.txt
 # Virtual environments
 .venv
