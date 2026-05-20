@@ -9,5 +9,6 @@ dependencies = [
     "google-genai>=2.4.0",
     "pypdf2>=3.0.1",
     "python-dotenv>=1.2.2",
+    "python-multipart>=0.0.29",
     "uvicorn>=0.47.0",
 ]
