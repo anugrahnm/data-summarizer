@@ -1,7 +1,7 @@
 [project]
-name = "data-summarizer"
+name = "backend"
 version = "0.1.0"
-description = "Add your description here"
+description = "Data Summarizer API"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
@@ -9,14 +9,5 @@ dependencies = [
     "google-genai>=2.4.0",
     "pypdf2>=3.0.1",
     "python-dotenv>=1.2.2",
-    "python-multipart>=0.0.29",
-    "requests>=2.34.2",
-    "streamlit>=1.57.0",
     "uvicorn>=0.47.0",
-]
-
-[tool.uv.workspace]
-members = [
-    "backend",
-    "frontend",
 ]
