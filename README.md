@@ -5,7 +5,7 @@ An AI-powered document summarisation tool. Upload a PDF or plain text file and g
 ## Live Demo
 
 **Frontend:** [data-summarizer.streamlit.app](https://data-summarizer.streamlit.app)  
-**API:** Coming soon
+**API:** [Render.com](https://data-summarizer-11ko.onrender.com/docs)
 
 ## How it works
 
