@@ -7,7 +7,9 @@ load_dotenv()
 
 uploaded_file = st.file_uploader("Choose a file")
 
-API_URL = os.getenv("API_URL", "http://127.0.0.1:8000/summarize/")
+API_URL = os.getenv("API_URL", "http://127.0.0.1:8000/summarizer/")
+
+st.set_page_config(page_title="Data Summarizer")
 
 print(type(uploaded_file))
 if uploaded_file is not None:
