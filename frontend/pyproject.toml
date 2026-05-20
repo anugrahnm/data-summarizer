@@ -1,5 +1,5 @@
 [project]
-package-mode = false
+
 name = "frontend"
 version = "0.1.0"
 description = "Data Summarizer"
@@ -10,3 +10,6 @@ dependencies = [
     "requests>=2.34.2",
     "streamlit>=1.57.0",
 ]
+
+[tool.poetry]
+package-mode = false
