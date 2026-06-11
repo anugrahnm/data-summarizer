@@ -2,11 +2,11 @@ from io import BytesIO
 from fastapi import FastAPI, HTTPException, UploadFile, File
 import os
 from dotenv import load_dotenv
-from datetime import date, datetime
 from google.genai.errors import ClientError, ServerError
-from pydantic import BaseModel, field_validator
 from PyPDF2 import PdfReader
 from google import genai
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import PlainTextResponse
 
 
 load_dotenv()
@@ -16,8 +16,14 @@ GEMINI_API_KEY= os.getenv("GEMINI_API_KEY")
 
 app = FastAPI(title="Data Summarizer")
 
-client = genai.Client()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
+client = genai.Client()
 
 @app.post("/summarize/")
 async def upload_file(file: UploadFile = File(...)):
@@ -40,20 +46,20 @@ async def upload_file(file: UploadFile = File(...)):
         
     try:
         response = client.models.generate_content(
-            model="gemini-2.5-flash",
+            model="gemini-3.1-flash-lite",
             contents=f"""
-                Act as an expert data analyst. Read the provided text and extract a comprehensive yet concise summary. 
-
-                Format your response using clean, native Markdown according to these structural rules:
-
-                1. Use 1-2 short paragraphs of flowing sentences to synthesize the main narrative, background, or core summary of the text.
-                2. Use standard Markdown headers (## or ###) to separate major concepts or sections.
-                3. Use bullet points (-) strictly for high-impact key data points, specific technical skills, or clear metrics that are difficult to read in a paragraph, even then keep it short while still keeping it sensible. Do not bullet entire paragraphs of text.
-                4. If the source text is short (e.g., less than 2-3 paragraphs), do not split it into different sections with headings; just provide the summary paragraphs cleanly.
-                5. Start your response immediately with the first Markdown element. Do not include any conversational intro ("Here is the summary:") or outro remarks. 
-
+                Act as an expert analyst. Read the provided text and produce a structured, accurate summary.
+                
+                Follow these rules strictly:
+                1. Open with 1-2 concise paragraphs covering the core narrative or purpose of the document with a heading using ###.
+                2. Use ### headers to separate distinct major sections only — do not create headers for minor points.
+                3. Use bullet points (-) only for concrete data, metrics, or lists of items. Never bullet prose.
+                4. Do not use em dashes (—). Use commas or restructure the sentence instead.
+                5. Do not pad or over-summarise. If the document is short, keep the summary short.
+                6. Never include filler phrases like "In conclusion" or "Overall".
+                7. Start immediately with the first word of the summary. No intro, no outro.
                 ---
-                ### TEXT TO SUMMARIZE:
+                TEXT TO SUMMARIZE:
                 {total_pages}
                 ---
             """
@@ -61,12 +67,12 @@ async def upload_file(file: UploadFile = File(...)):
 
         with open("response.txt", "w") as txt_file:
             txt_file.write(response.text)
-        return response.text
+        return PlainTextResponse(response.text)
     except ClientError as e:
         if e.code == 429:
-            return {"summary": "Rate limit hit! Google's free tier is cooling down. Please wait 30 seconds and try again."}
-        return {"summary": f"An error occurred: {e}"}
+            return "Rate limit hit! Google's free tier is cooling down. Please wait 30 seconds and try again."
+        return f"An error occurred: {e}"
     except ServerError as e:
         if e.code == 503:
-            return {"summary": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
-        return {"summary": f"An error occurred: {e}"}
+            return "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."
+        return f"An error occurred: {e}"

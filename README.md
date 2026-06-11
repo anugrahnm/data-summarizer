@@ -66,3 +66,4 @@ streamlit run app.py
 - Google Gemini API
 - PyPDF2
 - Requests
+
