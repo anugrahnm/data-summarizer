@@ -18,7 +18,7 @@ app = FastAPI(title="Data Summarizer")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=["https://summarizer.anugrah.dev"],
     allow_methods=["*"],
     allow_headers=["*"],
 )

@@ -32,10 +32,13 @@ function App() {
       const formData = new FormData();
       formData.append("file", file);
 
-      const response = await fetch("http://127.0.0.1:8000/summarize/", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        "https://summarizer-api.anugrah.dev/summarize/",
+        {
+          method: "POST",
+          body: formData,
+        },
+      );
 
       const text = await response.text();
 
